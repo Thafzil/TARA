@@ -1,7 +1,13 @@
 <h1>List of Applications</h1>
 
-<app-common-card [title]="'Crypto'" [sub]="'Copyright ©TARA'" [description]="cryptoDes"></app-common-card>
+<div style="display: flex;">
+ 
+<app-common-card [routeLink]="'/crypto'" [title]="'Crypto'" [sub]="'Copyright ©TARA'" [description]="cryptoDes" [className]="'example-header-image1'"></app-common-card>
 
+<app-common-card [routeLink]="'/calci'" [title]="'Calculator'" [sub]="'Copyright ©TARA'" [description]="'Basic Calculator'" [className]="'example-header-image1'"></app-common-card>
+
+   
+</div>
 
 
 <router-outlet></router-outlet>

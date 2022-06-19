@@ -1,0 +1,12 @@
+mat-card{
+    width: 300px;
+    height: auto;
+    align-self: center;
+    border-radius: 10px;
+    margin-bottom: 24px;
+}
+.mat-card:not([class*=mat-elevation-z]) {
+    box-shadow: 0 7px 5px -5px rgb(11, 230, 211), 
+                0 5px 5px 0 rgb(232, 255, 23), 
+                0 5px 8px 0 rgba(0,0,0,1);
+}

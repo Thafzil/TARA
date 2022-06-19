@@ -10,6 +10,8 @@ export class CommonCardComponent implements OnInit {
   @Input() title='';
   @Input() sub='';
   @Input() description='';
+  @Input() className=''
+  @Input() routeLink=''
   constructor() { }
 
   ngOnInit(): void {

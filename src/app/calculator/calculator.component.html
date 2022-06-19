@@ -1,0 +1,20 @@
+<div style="display:flex; justify-content: center;">
+    <mat-card>
+        <mat-grid-list cols="1" rowHeight="100px">
+            <mat-grid-tile>
+                <mat-form-field style="width: 90%;" appearance="outline" color="accent">
+                    <mat-label>Enter your Input</mat-label>
+                    <input matInput type="text" [(ngModel)]="value" readonly>
+                </mat-form-field>
+            </mat-grid-tile>
+        </mat-grid-list>
+        <mat-grid-list cols="3">
+            <mat-grid-tile *ngFor="let a of arr">
+                <button mat-flat-button color="accent" style="width:90%; height:60%" (click)="addValue(a)">{{a}}</button>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <button mat-flat-button color="accent" style="width:90%; height:60%" (click)="calculate()">=</button>
+            </mat-grid-tile>
+        </mat-grid-list>
+    </mat-card>
+</div>
