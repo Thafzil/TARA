@@ -1,0 +1,534 @@
+<!-- Requirements:
+1. Index Page with a list of currencies which lists global avg prices.
+2. Clicking on an individual coin, please integrate an accordion menu which will expand
+and show all the prices in the market(Get Markets). No need to integrate the graphs.
+3. Add filter to show all the Fiat Currencies, On selecting the option from filter the avg
+prices will change to the respective FIAT. Keep the Default currency to INR.(Get Fiats)
+4. Build a tickr on the top of the page with any 5 exchanges of your choice and any
+crypto-fiat price of your choice(Get Tickers).
+5. Sorting filters based on Price,MarketCap,%Change(1hr,1d).
+6. Feature to mark 3 currencies as favourites. -->
+
+<mat-toolbar color="primary"><span>CryptoCurrency List</span></mat-toolbar>
+
+<!-- tickr code starts -->
+<ng-container>
+  <mat-grid-list
+    [class.tickr]="!isScreenLtMedium"
+    [cols]="breakpoint"
+    rowHeight="32px"
+  >
+    <mat-grid-tile>
+      <button
+        [matMenuTriggerFor]="tickr"
+        matTooltip="Select Tickr"
+        mat-button
+        class="tickrBtn"
+      >
+        <span>{{ tickrSymbol | uppercase }}</span>
+        <mat-icon>arrow_drop_down</mat-icon>
+      </button></mat-grid-tile
+    >
+    <ng-container *ngIf="isFirst">
+      <mat-grid-tile *ngFor="let val of plotTickr.slice(0, 5)"
+        ><span
+          *ngIf="isFirst"
+          [@enterAnimation]
+          style="font-weight: 500; font-size: small"
+          >{{ val.exchange }}</span
+        ><span style="font-size: x-small" class="margin-left-xs">{{
+          val.price | number: "1.2-3"
+        }}</span></mat-grid-tile
+      >
+    </ng-container>
+    <ng-container *ngIf="!isFirst">
+      <mat-grid-tile *ngFor="let val of plotTickr.slice(5, 10)"
+        ><span
+          *ngIf="!isFirst"
+          [@enterAnimation]
+          style="font-weight: 500; font-size: small"
+          >{{ val.exchange }}</span
+        ><span style="font-size: x-small" class="margin-left-xs">{{
+          val.price | number: "1.2-3"
+        }}</span></mat-grid-tile
+      >
+    </ng-container>
+  </mat-grid-list>
+</ng-container>
+<!-- tickr code ends  -->
+
+<!-- fav code starts -->
+<div [hidden]="favoriteArr.length === 0" id="favId">
+  <h1 class="heading1">Favorites</h1>
+  <p style="font-size: small; margin-left: 32px">
+    * Select upto 3 Cryptocurrencies as favorites
+  </p>
+</div>
+<div *ngIf="favoriteArr.length > 0">
+  <mat-accordion>
+    <mat-expansion-panel disabled>
+      <mat-expansion-panel-header class="expansionHeader">
+        <mat-panel-title [style.width]="isScreenLtMedium ? '50%' : '30%'">
+          <div style="display: flex; width: 100%">
+            <span style="width: 20%; color: white" *ngIf="!isScreenLtMedium"
+              >Rank</span
+            >
+            <div
+              style="display: flex"
+              [style.width]="isScreenLtMedium ? '100%' : '30%'"
+            >
+              <div class="margin-left-xs">
+                <p style="margin-bottom: 0px; color: white">Name</p>
+              </div>
+            </div>
+          </div>
+        </mat-panel-title>
+        <mat-panel-description
+          style="justify-content: space-between; width: 60%; color: white"
+        >
+          <div style="margin-bottom: 0px; width: 33.33%">
+            <span> Price </span>
+          </div>
+          <div
+            style="margin-bottom: 0px; width: 33.33%"
+            *ngIf="!isScreenLtMedium"
+          >
+            <span>Market Cap</span>
+          </div>
+          <div
+            style="margin-bottom: 0px; width: 33.33%"
+            *ngIf="!isScreenLtMedium"
+          >
+            <span>Change (24Hr)</span>
+          </div>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+    </mat-expansion-panel>
+    <mat-expansion-panel
+      *ngFor="let coin of favoriteArr"
+      (opened)="getMarketsFav(coin.id)"
+      (closed)="panelOpenState = false"
+      #panelH
+    >
+      <mat-expansion-panel-header class="expansionHeader">
+        <mat-panel-title [style.width]="isScreenLtMedium ? '50%' : '30%'">
+          <div style="display: flex; width: 100%">
+            <span style="width: 20%" *ngIf="!isScreenLtMedium">{{
+              coin.rank
+            }}</span>
+            <div
+              style="display: flex"
+              [style.width]="isScreenLtMedium ? '100%' : '30%'"
+            >
+              <img
+                src="{{ coin.icon }}"
+                alt="{{ coin.name }}"
+                width="24"
+                height="24"
+              />
+              <div class="margin-left-xs">
+                <p style="margin-bottom: 0px">{{ coin.symbol }}</p>
+                <p style="margin-bottom: 0px; font-size: small">
+                  {{ coin.name }}
+                </p>
+              </div>
+            </div>
+            <mat-icon
+              color="primary"
+              (click)="removeFromFav(coin)"
+              (click)="$event.stopPropagation()"
+              matTooltip="Remove from Favorites"
+              >favorite</mat-icon
+            >
+          </div>
+        </mat-panel-title>
+        <mat-panel-description
+          style="justify-content: space-between; width: 60%"
+        >
+          <div style="margin-bottom: 0px; width: 33.33%">
+            <span>
+              {{ coin.price | currency: language }}
+            </span>
+          </div>
+          <div
+            style="margin-bottom: 0px; width: 33.33%"
+            *ngIf="!isScreenLtMedium"
+          >
+            <span> {{ coin.marketCap | currency: language }}</span>
+          </div>
+          <div
+            style="margin-bottom: 0px; width: 33.33%"
+            *ngIf="!isScreenLtMedium"
+          >
+            <span> {{ coin.priceChange1d / 100 | percent: "1.2-5" }}</span>
+          </div>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div *ngIf="isScreenLtMedium">
+        <h2>Currency Details</h2>
+        <mat-grid-list [cols]="1" rowHeight="32px">
+          <mat-grid-tile style="background: #3f51b5; color: white"
+            ><span>Rank:</span>
+            <span class="margin-left-xs">{{ coin.rank }}</span>
+          </mat-grid-tile>
+          <mat-grid-tile style="background: #3f51b5; color: white"
+            ><span>Market Cap:</span>
+            <span class="margin-left-xs">{{
+              coin.marketCap | currency: language
+            }}</span>
+          </mat-grid-tile>
+          <mat-grid-tile style="background: #3f51b5; color: white"
+            ><span>Change (24Hr):</span>
+            <span class="margin-left-xs">{{
+              coin.priceChange1d / 100 | percent: "1.2-5"
+            }}</span>
+          </mat-grid-tile>
+        </mat-grid-list>
+      </div>
+      <div *ngIf="favFetchStatus === 'done'">
+        <h2 class="margin-top-xs">Market Details</h2>
+        <mat-grid-list [cols]="3" rowHeight="32px">
+          <mat-grid-tile style="background: #3f51b5; color: white"
+            >Exchange
+          </mat-grid-tile>
+          <mat-grid-tile style="background: #3f51b5; color: white"
+            >Pair
+          </mat-grid-tile>
+          <mat-grid-tile style="background: #3f51b5; color: white"
+            >Price
+          </mat-grid-tile>
+        </mat-grid-list>
+        <mat-grid-list
+          [cols]="3"
+          rowHeight="32px"
+          *ngFor="let market of marketListFav | slice: page.p3:page.p3 + 10"
+        >
+          <mat-grid-tile style="background: #c2185b; color: white">{{ market.exchange }} </mat-grid-tile>
+          <mat-grid-tile style="background: #c2185b; color: white">{{ market.pair }} </mat-grid-tile>
+          <mat-grid-tile style="background: #c2185b; color: white">{{ market.price | currency }} </mat-grid-tile>
+        </mat-grid-list>
+        <mat-paginator
+          *ngIf="marketList.length > 10"
+          showFirstLastButtons
+          [length]="marketList.length"
+          [pageSize]="10"
+          (page)="changePage($event, 3)"
+        >
+        </mat-paginator>
+      </div>
+      <div *ngIf="favFetchStatus !== 'done'">
+        <p>fetching...</p>
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
+<!-- fav code ends  -->
+
+<!-- main list code starts  -->
+<div>
+  <h1 class="heading1">List of Cryptocurrencies</h1>
+</div>
+<!-- fiat dropdown code  -->
+<div style="text-align: end; margin-right: 32px">
+  <p style="font-weight: 400">Select FIAT currency</p>
+  <button
+    [matMenuTriggerFor]="fiat"
+    matTooltip="Select FIAT"
+    mat-button
+    class="fiatBtn"
+  >
+    <span>{{ language | uppercase }}</span>
+    <mat-icon>arrow_drop_down</mat-icon>
+  </button>
+</div>
+<div *ngIf="mainStatus === 'done'">
+  <mat-accordion>
+    <mat-expansion-panel disabled>
+      <mat-expansion-panel-header class="expansionHeader">
+        <mat-panel-title [style.width]="isScreenLtMedium ? '50%' : '30%'">
+          <div style="display: flex; width: 100%">
+            <span
+              style="width: 20%; color: white; cursor: pointer"
+              class="noSelection"
+              (click)="sortBy('rank')"
+              *ngIf="!isScreenLtMedium"
+              >Rank<mat-icon *ngIf="rankAsc && showArr.indexOf('rank') !== -1"
+                >arrow_drop_down</mat-icon
+              ><mat-icon *ngIf="!rankAsc && showArr.indexOf('rank') !== -1"
+                >arrow_drop_up</mat-icon
+              ></span
+            >
+            <div
+              style="display: flex"
+              [style.width]="isScreenLtMedium ? '100%' : '30%'"
+            >
+              <div class="margin-left-xs">
+                <p
+                  style="margin-bottom: 0px; color: white; cursor: pointer"
+                  (click)="sortBy('symbol')"
+                  class="noSelection"
+                >
+                  Name<mat-icon
+                    *ngIf="nameAsc && showArr.indexOf('symbol') !== -1"
+                    >arrow_drop_down</mat-icon
+                  ><mat-icon
+                    *ngIf="!nameAsc && showArr.indexOf('symbol') !== -1"
+                    >arrow_drop_up</mat-icon
+                  >
+                </p>
+              </div>
+            </div>
+          </div>
+        </mat-panel-title>
+        <mat-panel-description
+          style="justify-content: space-between; width: 60%; color: white"
+        >
+          <div
+            style="margin-bottom: 0px; width: 33.33%; cursor: pointer"
+            (click)="sortBy('price')"
+          >
+            <span class="noSelection"
+              >Price<mat-icon
+                *ngIf="priceAsc && showArr.indexOf('price') !== -1"
+                >arrow_drop_down</mat-icon
+              ><mat-icon *ngIf="!priceAsc && showArr.indexOf('price') !== -1"
+                >arrow_drop_up</mat-icon
+              ></span
+            >
+          </div>
+          <div
+            *ngIf="!isScreenLtMedium"
+            style="margin-bottom: 0px; width: 33.33%; cursor: pointer"
+            (click)="sortBy('marketCap')"
+          >
+            <span class="noSelection"
+              >Market Cap<mat-icon
+                *ngIf="marketAsc && showArr.indexOf('marketCap') !== -1"
+                >arrow_drop_down</mat-icon
+              ><mat-icon
+                *ngIf="!marketAsc && showArr.indexOf('marketCap') !== -1"
+                >arrow_drop_up</mat-icon
+              ></span
+            >
+          </div>
+          <div
+            *ngIf="!isScreenLtMedium"
+            style="margin-bottom: 0px; width: 33.33%; cursor: pointer"
+            (click)="sortBy('priceChange1d')"
+          >
+            <span class="noSelection"
+              >Change (24Hr)<mat-icon
+                *ngIf="changeAsc && showArr.indexOf('priceChange1d') !== -1"
+                >arrow_drop_down</mat-icon
+              ><mat-icon
+                *ngIf="!changeAsc && showArr.indexOf('priceChange1d') !== -1"
+                >arrow_drop_up</mat-icon
+              ></span
+            >
+          </div>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+    </mat-expansion-panel>
+    <mat-expansion-panel
+      *ngFor="let coin of coins | slice: page.p1:page.p1 + 10"
+      (opened)="getMarkets(coin.id)"
+      (closed)="panelOpenState = false"
+      #panelH
+    >
+      <mat-expansion-panel-header class="expansionHeader">
+        <mat-panel-title [style.width]="isScreenLtMedium ? '50%' : '30%'">
+          <div style="display: flex; width: 100%">
+            <span style="width: 20%" *ngIf="!isScreenLtMedium">{{
+              coin.rank
+            }}</span>
+            <div
+              style="display: flex"
+              [style.width]="isScreenLtMedium ? '100%' : '30%'"
+            >
+              <img
+                src="{{ coin.icon }}"
+                alt="{{ coin.name }}"
+                width="24"
+                height="24"
+              />
+              <div class="margin-left-xs">
+                <p style="margin-bottom: 0px">{{ coin.symbol }}</p>
+                <p style="margin-bottom: 0px; font-size: small">
+                  {{ coin.name }}
+                </p>
+              </div>
+            </div>
+            <mat-icon
+              *ngIf="
+                favoriteArrId.length < 3 &&
+                favoriteArrId.indexOf(coin.id) === -1
+              "
+              color="primary"
+              [class.showIcon]="!isScreenLtMedium"
+              (click)="$event.stopPropagation()"
+              (click)="addToFav(coin)"
+              matTooltip="Add to Favorites"
+              >favorite_border</mat-icon
+            >
+            <mat-icon
+              *ngIf="favoriteArrId.indexOf(coin.id) !== -1"
+              color="primary"
+              (click)="removeFromFav(coin)"
+              (click)="$event.stopPropagation()"
+              matTooltip="Remove from Favorites"
+              >favorite</mat-icon
+            >
+          </div>
+        </mat-panel-title>
+        <mat-panel-description
+          style="justify-content: space-between; width: 60%"
+        >
+          <div style="margin-bottom: 0px; width: 33.33%">
+            <span>
+              {{ coin.price | currency: language }}
+            </span>
+          </div>
+          <div
+            style="margin-bottom: 0px; width: 33.33%"
+            *ngIf="!isScreenLtMedium"
+          >
+            <span> {{ coin.marketCap | currency: language }}</span>
+          </div>
+          <div
+            style="margin-bottom: 0px; width: 33.33%"
+            *ngIf="!isScreenLtMedium"
+          >
+            <span> {{ coin.priceChange1d / 100 | percent: "1.2-5" }}</span>
+          </div>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div *ngIf="isScreenLtMedium">
+        <h2>Currency Details</h2>
+        <mat-grid-list [cols]="1" rowHeight="32px">
+          <mat-grid-tile style="background: #3f51b5; color: white"
+            ><span>Rank:</span>
+            <span class="margin-left-xs">{{ coin.rank }}</span>
+          </mat-grid-tile>
+          <mat-grid-tile style="background: #3f51b5; color: white"
+            ><span>Market Cap:</span>
+            <span class="margin-left-xs">{{
+              coin.marketCap | currency: language
+            }}</span>
+          </mat-grid-tile>
+          <mat-grid-tile style="background: #3f51b5; color: white"
+            ><span>Change (24Hr):</span>
+            <span class="margin-left-xs">{{
+              coin.priceChange1d / 100 | percent: "1.2-5"
+            }}</span>
+          </mat-grid-tile>
+        </mat-grid-list>
+      </div>
+      <div *ngIf="fetchStatus === 'done'">
+        <h2 class="margin-top-xs">Market Details</h2>
+        <mat-grid-list [cols]="3" rowHeight="32px">
+          <mat-grid-tile style="background: #3f51b5; color: white"
+            >Exchange
+          </mat-grid-tile>
+          <mat-grid-tile style="background: #3f51b5; color: white"
+            >Pair
+          </mat-grid-tile>
+          <mat-grid-tile style="background: #3f51b5; color: white"
+            >Price
+          </mat-grid-tile>
+        </mat-grid-list>
+        <mat-grid-list
+          [cols]="3"
+          rowHeight="32px"
+          *ngFor="let market of marketList | slice: page.p2:page.p2 + 10"
+        >
+          <mat-grid-tile style="background: #c2185b; color: white">{{ market.exchange }} </mat-grid-tile>
+          <mat-grid-tile style="background: #c2185b; color: white">{{ market.pair }} </mat-grid-tile>
+          <mat-grid-tile style="background: #c2185b; color: white">{{ market.price | currency }} </mat-grid-tile>
+        </mat-grid-list>
+        <mat-paginator
+          *ngIf="marketList.length > 10"
+          showFirstLastButtons
+          [length]="marketList.length"
+          [pageSize]="10"
+          (page)="changePage($event, 2)"
+        >
+        </mat-paginator>
+      </div>
+      <div *ngIf="fetchStatus !== 'done'">
+        <p>fetching...</p>
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+  <mat-paginator
+    *ngIf="coins.length > 10"
+    showFirstLastButtons
+    [length]="coins.length"
+    [pageSize]="10"
+    (page)="changePage($event, 1)"
+  >
+  </mat-paginator>
+</div>
+<div *ngIf="mainStatus !== 'done'">
+  <mat-spinner style="margin: auto; justify-content: center"></mat-spinner>
+</div>
+<!-- main-list code ends  -->
+
+<!-- fiat dropdown  -->
+<mat-menu #fiat="matMenu">
+  <ng-template matMenuContent>
+    <button
+      mat-menu-item
+      style="display: flex; justify-content: space-between"
+      *ngFor="let lang of fiatsArr"
+      (click)="setFiat(lang.name)"
+    >
+      <span
+        style="
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          text-align: center;
+          align-items: center;
+        "
+      >
+        <img class="img" [src]="lang.imageUrl" />
+        <span style="margin-left: 0.5rem">{{ lang.name }}</span>
+        <mat-icon style="margin-left: 0.5rem" *ngIf="lang.name === language"
+          >check</mat-icon
+        >
+      </span>
+    </button>
+  </ng-template>
+</mat-menu>
+
+<!-- tickr dropdown  -->
+<mat-menu #tickr="matMenu">
+  <ng-template matMenuContent>
+    <button
+      mat-menu-item
+      style="display: flex; justify-content: space-between"
+      *ngFor="let lang of tickrArr; let i = index"
+      (click)="setTickr(i)"
+    >
+      <span
+        style="
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          text-align: center;
+          align-items: center;
+        "
+      >
+        <img class="img" [src]="lang.icon" />
+        <span style="margin-left: 0.5rem">{{ lang.symbol }}</span>
+        <mat-icon
+          style="margin-left: 0.5rem"
+          *ngIf="lang.symbol === tickrSymbol"
+          >check</mat-icon
+        >
+      </span>
+    </button>
+  </ng-template>
+</mat-menu>
