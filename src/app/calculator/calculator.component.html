@@ -1,6 +1,6 @@
 <div style="display:flex; justify-content: center;">
     <mat-card>
-        <p style="display:flex;text-shadow: 2px 2px orangered; justify-content: center; margin-bottom: 0; color: #c2185b; font-size: xx-large; font-weight: bolder; font-family: cursive;">CALCI</p>
+        <p style="display:flex;text-shadow: 2px 2px orangered; justify-content: center; color: #c2185b; font-size: xx-large; font-weight: bolder; font-family: cursive;">CALCI</p>
         <mat-grid-list cols="1" rowHeight="100px">
             <mat-grid-tile>
                 <mat-form-field style="width: 100%;" appearance="outline" color="accent">
@@ -9,21 +9,52 @@
                 </mat-form-field>
             </mat-grid-tile>
         </mat-grid-list>
+        <mat-accordion>
+            <mat-expansion-panel >
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  History
+                </mat-panel-title>
+                <mat-panel-description>
+                  Past Calculations
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              <div *ngFor="let a of allCalculations?.reverse()" style="display: flex; justify-content: end; border: 1px rgb(241, 238, 238) dotted; padding: 12px;">
+                <p style="font-size: xx-large; margin-bottom: 0;" >{{a}}</p>
+              </div>
+              <p style="display: flex; justify-content: end; margin-bottom: 0;" *ngIf="allCalculations.length===0">No History</p>
+            </mat-expansion-panel>
+          </mat-accordion>
         <mat-grid-list cols="4">
-            <mat-grid-tile *ngFor="let a of arr">
+            <mat-grid-tile *ngFor="let a of arr1">
                 <button mat-flat-button color="accent" style="width:90%; height:60%;font-size: x-large;" (click)="addValue(a)">{{a}}</button>
             </mat-grid-tile>
-            <mat-grid-tile>
-                <button mat-flat-button color="accent" style="width:90%; height:60%;font-size: x-large;" (click)="deleteVal()">{{back}}</button>
+            <mat-grid-tile *ngFor="let a of arr2">
+                <button mat-flat-button color="accent" style="width:90%; height:60%;font-size: xx-large; padding-bottom: 8%;" (click)="addValue(a)">{{a}}</button>
             </mat-grid-tile>
             <mat-grid-tile>
-                <button mat-flat-button color="primary" style="width:90%; height:60%; font-size: xx-large;" (click)="calculate()">=</button>
+                <button mat-flat-button color="accent" style="width:90%; height:60%;font-size: xxx-large; padding-bottom: 8%;" (click)="deleteVal()">{{back}}</button>
+            </mat-grid-tile>
+            <mat-grid-tile matTooltip="Equals to">
+                <button mat-flat-button color="primary" style="width:90%; height:60%; font-size: xxx-large; padding-bottom: 8%;" (click)="calculate()">=</button>
             </mat-grid-tile>
         </mat-grid-list>
-        <div style="float: right;">
-            <em style="font-size:x-small; font-family: cursive;"><u>Use buttons on the screen only</u></em>
-        </div>
+        
+        <mat-grid-list cols="2" rowHeight="20px" style="margin: 4% 0% 3% 0%;">
+            <mat-grid-tile>
+                <button mat-flat-button color="accent" style="border-radius: 40%;" (click)="clearCals()">Clear History</button>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <button mat-flat-button color="accent" style="border-radius: 40%;" (click)="clearInput()">Clear All</button>
+            </mat-grid-tile>
+        </mat-grid-list>
+            <mat-grid-list cols="1" rowHeight="20px">
+            <mat-grid-tile>
+                <div style="display: flex; justify-content: space-between;">
+                    <em style="font-size:x-small; font-family: cursive;">Use buttons on the screen only</em>
+                </div>
+            </mat-grid-tile>
+        </mat-grid-list>
     </mat-card>
 
-    
 </div>

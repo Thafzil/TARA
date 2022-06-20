@@ -14,3 +14,9 @@ mat-card{
 *{
     font-family: cursive;
 }
+
+::ng-deep .mat-expansion-panel-body{
+    background-color: rgb(11,230,211);
+    max-height: 250px;
+    overflow-y: auto;
+}

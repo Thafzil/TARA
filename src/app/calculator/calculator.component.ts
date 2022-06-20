@@ -9,18 +9,26 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class CalculatorComponent implements OnInit {
 
   constructor(private _snackBar: MatSnackBar) { }
-  arr:string[]=['1','2','3','4','5','6','7','8','9','0','+','-','*','/','%','(',')','^']
+  arr1:string[]=['1','2','3','4','5','6','7','8','9','0'];
+  arr2=['+','-','*','/','%','(',')','^']
   value = '';
   back='<-'
+  allCalculations:string[]=[]
   ngOnInit(): void {
   }
   calculate(){
     try {
-      this.value=eval(this.value.replaceAll('^','**'))
-      this.value=this.value.toString();
+      if(this.value){
+          this.allCalculations.push(this.value)
+          this.value=eval(this.value.replaceAll('^','**'))
+          this.value=this.value.toString();
+          this.allCalculations.push('='+this.value)
+      }
+
     } catch (error:Error|undefined|any) {
       let e:Error=error
       console.log(e.message);
+      this.allCalculations.push(e.message)
       this._snackBar.open(e.message,'Try Again',{duration:3000});
       this.value=''
     }
@@ -31,6 +39,13 @@ export class CalculatorComponent implements OnInit {
   }
   deleteVal(){
     this.value=this.value.substring(0,this.value.length-1)
+  }
+
+  clearInput(){
+    this.value='';
+  }
+  clearCals(){
+    this.allCalculations=[]
   }
 
 }
