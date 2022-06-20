@@ -1,20 +1,29 @@
 <div style="display:flex; justify-content: center;">
     <mat-card>
+        <p style="display:flex;text-shadow: 2px 2px orangered; justify-content: center; margin-bottom: 0; color: #c2185b; font-size: xx-large; font-weight: bolder; font-family: cursive;">CALCI</p>
         <mat-grid-list cols="1" rowHeight="100px">
             <mat-grid-tile>
-                <mat-form-field style="width: 90%;" appearance="outline" color="accent">
-                    <mat-label>Enter your Input</mat-label>
+                <mat-form-field style="width: 100%;" appearance="outline" color="accent">
+                    <mat-label style="font-family: cursive;">Enter your Input</mat-label>
                     <input matInput type="text" [(ngModel)]="value" readonly>
                 </mat-form-field>
             </mat-grid-tile>
         </mat-grid-list>
-        <mat-grid-list cols="3">
+        <mat-grid-list cols="4">
             <mat-grid-tile *ngFor="let a of arr">
-                <button mat-flat-button color="accent" style="width:90%; height:60%" (click)="addValue(a)">{{a}}</button>
+                <button mat-flat-button color="accent" style="width:90%; height:60%;font-size: x-large;" (click)="addValue(a)">{{a}}</button>
             </mat-grid-tile>
             <mat-grid-tile>
-                <button mat-flat-button color="accent" style="width:90%; height:60%" (click)="calculate()">=</button>
+                <button mat-flat-button color="accent" style="width:90%; height:60%;font-size: x-large;" (click)="deleteVal()">{{back}}</button>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <button mat-flat-button color="primary" style="width:90%; height:60%; font-size: xx-large;" (click)="calculate()">=</button>
             </mat-grid-tile>
         </mat-grid-list>
+        <div style="float: right;">
+            <em style="font-size:x-small; font-family: cursive;"><u>Use buttons on the screen only</u></em>
+        </div>
     </mat-card>
+
+    
 </div>

@@ -6,7 +6,11 @@ mat-card{
     margin-bottom: 24px;
 }
 .mat-card:not([class*=mat-elevation-z]) {
-    box-shadow: 0 7px 5px -5px rgb(11, 230, 211), 
-                0 5px 5px 0 rgb(232, 255, 23), 
-                0 5px 8px 0 rgba(0,0,0,1);
+    box-shadow: 3px 7px 5px -5px rgb(11, 230, 211), 
+                3px 5px 5px 0 rgb(232, 255, 23), 
+                3px 5px 8px 0 rgba(0,0,0,1);
+}
+
+*{
+    font-family: cursive;
 }
