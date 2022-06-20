@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatExpansionModule} from '@angular/material/expansion';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 
 
@@ -31,7 +32,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
     FormsModule,
     MatSnackBarModule,
     MatTooltipModule,
-    MatExpansionModule
+    MatExpansionModule,
+    DragDropModule
   ]
 })
 export class CalculatorModule { }

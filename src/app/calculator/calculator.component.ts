@@ -10,7 +10,15 @@ export class CalculatorComponent implements OnInit {
 
   constructor(private _snackBar: MatSnackBar) { }
   arr1:string[]=['1','2','3','4','5','6','7','8','9','0'];
-  arr2=['+','-','*','/','%','(',')','^']
+  arr2=[{tool:'Add',val:'+'},
+  {tool:'Subtract',val:'-'},
+  {tool:'Multiply',val:'*'},
+  {tool:'Divide',val:'/'},
+  {tool:'Mod Div',val:'%'},
+  {tool:'Power',val:'^'},
+  {tool:'(',val:'('},
+  {tool:')',val:')'}]
+
   value = '';
   back='<-'
   allCalculations:string[]=[]

@@ -1,10 +1,14 @@
 .example-card {
     width: 300px;
-    height: 300px;
-    margin-right: 3em;
+    height: 250px;
+    margin: 3em;
   }
   
   .example-header-image1 {
-    background-image: url(../../../../assets/no1.jpg);
+    background-image: radial-gradient(rgb(129, 245, 52),rgb(136, 50, 0));
+    background-size: cover;
+  }
+  .example-header-image2 {
+    background-image: radial-gradient(rgb(250, 75, 212),rgb(5, 0, 80));
     background-size: cover;
   }

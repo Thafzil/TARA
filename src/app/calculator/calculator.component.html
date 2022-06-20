@@ -9,8 +9,8 @@
                 </mat-form-field>
             </mat-grid-tile>
         </mat-grid-list>
-        <mat-accordion>
-            <mat-expansion-panel >
+        <mat-accordion style="position: absolute; z-index: 1; width: 90%; top: 20%;" class="example-box" cdkDrag>
+            <mat-expansion-panel style="width: 100%;">
               <mat-expansion-panel-header>
                 <mat-panel-title>
                   History
@@ -20,23 +20,23 @@
                 </mat-panel-description>
               </mat-expansion-panel-header>
               <div *ngFor="let a of allCalculations?.reverse()" style="display: flex; justify-content: end; border: 1px rgb(241, 238, 238) dotted; padding: 12px;">
-                <p style="font-size: xx-large; margin-bottom: 0;" >{{a}}</p>
+                <p style="margin-bottom: 0;" >{{a}}</p>
               </div>
               <p style="display: flex; justify-content: end; margin-bottom: 0;" *ngIf="allCalculations.length===0">No History</p>
             </mat-expansion-panel>
           </mat-accordion>
-        <mat-grid-list cols="4">
+        <mat-grid-list cols="4" style="margin-top: 10%;">
             <mat-grid-tile *ngFor="let a of arr1">
                 <button mat-flat-button color="accent" style="width:90%; height:60%;font-size: x-large;" (click)="addValue(a)">{{a}}</button>
             </mat-grid-tile>
-            <mat-grid-tile *ngFor="let a of arr2">
-                <button mat-flat-button color="accent" style="width:90%; height:60%;font-size: xx-large; padding-bottom: 8%;" (click)="addValue(a)">{{a}}</button>
+            <mat-grid-tile *ngFor="let a of arr2" >
+                <button [matTooltip]="a.tool" matTooltipPosition="above" mat-flat-button color="accent" style="width:90%; height:60%;font-size: xx-large; padding-bottom: 8%;" (click)="addValue(a.val)">{{a.val}}</button>
+            </mat-grid-tile>
+            <mat-grid-tile >
+                <button matTooltip="Backspace" matTooltipPosition="above" mat-flat-button color="accent" style="width:90%; height:60%;font-size: xxx-large; padding-bottom: 8%;" (click)="deleteVal()">{{back}}</button>
             </mat-grid-tile>
             <mat-grid-tile>
-                <button mat-flat-button color="accent" style="width:90%; height:60%;font-size: xxx-large; padding-bottom: 8%;" (click)="deleteVal()">{{back}}</button>
-            </mat-grid-tile>
-            <mat-grid-tile matTooltip="Equals to">
-                <button mat-flat-button color="primary" style="width:90%; height:60%; font-size: xxx-large; padding-bottom: 8%;" (click)="calculate()">=</button>
+                <button  matTooltip="Equals to" matTooltipPosition="above" mat-flat-button color="primary" style="width:90%; height:60%; font-size: xxx-large; padding-bottom: 8%;" (click)="calculate()">=</button>
             </mat-grid-tile>
         </mat-grid-list>
         
