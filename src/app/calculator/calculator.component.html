@@ -3,17 +3,18 @@
         <p style="display:flex;text-shadow: 2px 2px orangered; justify-content: center; color: #c2185b; font-size: xx-large; font-weight: bolder; font-family: cursive;">CALCI</p>
         <mat-grid-list cols="1" rowHeight="100px">
             <mat-grid-tile>
-                <mat-form-field style="width: 100%;" appearance="outline" color="accent">
+                <mat-form-field style="width: 100%; position: relative;" appearance="outline" color="accent">
                     <mat-label style="font-family: cursive;">Enter your Input</mat-label>
                     <input matInput type="text" [(ngModel)]="value" readonly>
                 </mat-form-field>
+                <p *ngIf="result" class="resultClass">{{result}}</p>
             </mat-grid-tile>
         </mat-grid-list>
         <mat-accordion style="position: absolute; z-index: 1; width: 90%; top: 20%;" class="example-box" cdkDrag>
             <mat-expansion-panel style="width: 100%;" hideToggle (opened)="panelOpenState = true"
             (closed)="panelOpenState = false">
               <mat-expansion-panel-header  #panelH (click)="panelH._toggle()">
-                <div class="example-handle" cdkDragHandle (click)="panelH._toggle()">
+                <div class="example-handle" cdkDragHandle>
                     <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
                       <path d="M0 0h24v24H0z" fill="none"></path>
@@ -26,10 +27,10 @@
                   <button (click)="panelH._toggle()" mat-stroked-button>{{panelOpenState ? 'Hide Calculations' : 'Show Calculations'}}</button>
                 </mat-panel-description>
               </mat-expansion-panel-header>
-              <div *ngFor="let a of allCalculations?.reverse()" style="display: flex; justify-content: end; border: 1px rgb(241, 238, 238) dotted; padding: 12px;">
-                <p style="margin-bottom: 0;" >{{a}}</p>
+              <div *ngFor="let a of allCalculations?.reverse()" style="display: flex; justify-content: end; border: 1px rgb(241, 238, 238) dotted; padding: 12px; word-break: break-all;">
+                <p style="margin-bottom: 0;display: flex; flex-wrap: wrap;" >{{a}}</p>
               </div>
-              <p style="display: flex; justify-content: end; margin-bottom: 0;" *ngIf="allCalculations.length===0">No History</p>
+              <p style="display: flex; flex-wrap: wrap; justify-content: end; margin-bottom: 0;" *ngIf="allCalculations.length===0">No History</p>
             </mat-expansion-panel>
           </mat-accordion>
         <mat-grid-list cols="4" style="margin-top: 10%;">

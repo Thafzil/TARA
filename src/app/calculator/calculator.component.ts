@@ -20,6 +20,7 @@ export class CalculatorComponent implements OnInit {
   {tool:')',val:')'}]
   panelOpenState=false
   value = '';
+  result='';
   back='<-'
   allCalculations:string[]=[]
   ngOnInit(): void {
@@ -30,6 +31,7 @@ export class CalculatorComponent implements OnInit {
           this.allCalculations.push(this.value)
           this.value=eval(this.value.replaceAll('^','**'))
           this.value=this.value.toString();
+          this.result=this.value;
           this.allCalculations.push('='+this.value)
       }
 
@@ -39,11 +41,23 @@ export class CalculatorComponent implements OnInit {
       this.allCalculations.push(e.message)
       this._snackBar.open(e.message,'Try Again',{duration:3000});
       this.value=''
+      this.result=''
+    }
+    
+  }
+
+  calculate1(){
+    try {
+      this.result=eval(this.value.replaceAll('^','**'))
+      this.result=this.result.toString()
+    } catch (error:Error|undefined|any) {
+      this.result=''
     }
     
   }
   addValue(a:string){
     this.value+=a;
+    this.calculate1()
   }
   deleteVal(){
     this.value=this.value.substring(0,this.value.length-1)
