@@ -18,7 +18,7 @@ export class CalculatorComponent implements OnInit {
   {tool:'Power',val:'^'},
   {tool:'(',val:'('},
   {tool:')',val:')'}]
-
+  panelOpenState=false
   value = '';
   back='<-'
   allCalculations:string[]=[]
